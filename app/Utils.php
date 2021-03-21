@@ -19,5 +19,4 @@ class Utils {
         $value = preg_replace('/[^\\d.]+/', '', $value);
         return (float) $value;
     }
-
 }

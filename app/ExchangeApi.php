@@ -41,8 +41,6 @@ class ExchangeApi {
     }
 
     private function sendRequest(string $url): \StdClass {
-        $result = new \stdClass();
-
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);

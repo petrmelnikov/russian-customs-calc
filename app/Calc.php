@@ -5,13 +5,19 @@ namespace App;
 use App\ExchangeApi;
 
 class Calc {
+    public const CURRENCY_SIGN_MAP = [
+        'CDN$' => 'CAD',
+        '$' => 'USD',
+        '€' => 'EUR',
+        '₽' => 'RUB',
+    ];
 
-    const TAX_FREE_MAX_EUR = [
+    public const TAX_FREE_MAX_EUR = [
         2019 => 500,
         2020 => 200,
     ];
 
-    const TAX = [
+    public const TAX = [
         2019 => 1.3, // 30%
         2020 => 1.15, // 15%
     ];
@@ -25,7 +31,7 @@ class Calc {
         $this->currnetYear = $currentYear;
     }
 
-    function calculateTax(float $price, string $currency): array
+    public function calculateTax(float $price, string $currency): array
     {
         $rates = $this->exchangeApi->getRates($currency);
         $taxFreeMax = $this->getTaxFreeMaxEur() / $rates->rates->EUR;
@@ -42,13 +48,24 @@ class Calc {
         }
 
         $result = [];
-        foreach($rates->rates as $currency => $rate) {
+        foreach ($rates->rates as $currency => $rate) {
             $result[$currency] = [
                 'price' => round($price * $rate, 2),
-                'price_above_tax_free_value' => round(($valueAboveTaxFree > 0 ? $valueAboveTaxFree : 0 ) * $rate, 2),
+                'price_above_tax_free_value' => round(($valueAboveTaxFree > 0 ? $valueAboveTaxFree : 0) * $rate, 2),
                 'tax' => round($tax * $rate),
                 'price_with_tax' => round($priceWithTaxUsd * $rate),
             ];
+        }
+        return $result;
+    }
+
+    public static function autodetectCurrency(string $rawValue): ?string {
+        $result = null;
+        foreach (self::CURRENCY_SIGN_MAP as $sign => $code) {
+            if (false !== stristr($rawValue, $sign)) {
+                $result = $code;
+                break;
+            }
         }
         return $result;
     }

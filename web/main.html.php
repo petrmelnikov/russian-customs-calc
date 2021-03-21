@@ -22,7 +22,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="currency">Currency</label>
+                        <label for="currency">Currency<?=(null !== $currencyAutodetected ? ' (Autodetected)' : '')?></label>
                         <select name="currency" id="currency" class="form-control">
                             <?php foreach ($currencies as $currencyName) {?>
                                 <option
