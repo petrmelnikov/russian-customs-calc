@@ -1,5 +1,7 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <link rel="stylesheet" href="/web/bootstrap/css/bootstrap.css">
         <script src="/web/bootstrap/js/bootstrap.bundle.js"></script>
     </head>
