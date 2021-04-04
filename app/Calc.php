@@ -10,6 +10,7 @@ class Calc {
         '$' => 'USD',
         '€' => 'EUR',
         '₽' => 'RUB',
+        '£' => 'GBP',
     ];
 
     public const TAX_FREE_MAX_EUR = [

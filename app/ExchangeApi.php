@@ -14,6 +14,7 @@ class ExchangeApi {
             'RUB',
             'USD',
             'CAD',
+            'GBP',
         ];
     }
 
