@@ -3,10 +3,24 @@
 namespace App;
 
 use \Exception;
+use Shieldon\SimpleCache\Cache;
 
 class ExchangeApi {
 
-    const API_RATES_URL = 'https://api.ratesapi.io/api/latest';
+    private const API_RATES_URL = 'http://api.exchangeratesapi.io/v1/latest';
+    private const ACCESS_KEY = '16035d27fc6db791eb5fef930ea82184';
+
+    private const RATES_CACHE_KEY = 'rates';
+    private const RATES_CACHE_TTL = 60*60;
+
+    private $cache = null;
+
+    public function __construct()
+    {
+        $this->cache = new Cache('file', [
+            'storage' => __DIR__ . '/../cache'
+        ]);
+    }
 
     public static function getCurrencies(): array {
         return [
@@ -26,18 +40,44 @@ class ExchangeApi {
         }
 
         $params = [
-            'symbols' => implode(',', array_diff($currencies, [$baseCurrency])),
-            'base' => $baseCurrency,
+            'symbols' => implode(',', $currencies),
+            'access_key' => self::ACCESS_KEY,
         ];
 
         $url = self::API_RATES_URL . '?' . http_build_query($params);
 
-        $rates = $this->sendRequest($url);
+        $rates = $this->getRatesCached($url);
 
-        if (isset($rates->rates)) {
-            $rates->rates->$baseCurrency = 1;
+        if ($rates->base !== $baseCurrency) {
+            $rates->rates = $this->recaluculateBase(
+                $rates->rates,
+                $baseCurrency,
+                $rates->base
+            );
         }
 
+        return $rates;
+    }
+
+    private function getRatesCached(string $url): \StdClass {
+        if (!$this->cache->has(self::RATES_CACHE_KEY)) {
+            $rates = $this->sendRequest($url);
+            $this->cache->set(self::RATES_CACHE_KEY, $rates, self::RATES_CACHE_TTL);
+        } else {
+            $rates = $this->cache->get(self::RATES_CACHE_KEY);
+        }
+        return $rates;
+    }
+
+    private function recaluculateBase(\StdClass $rates, string $newBaseCurrency, string $oldBaseCurrncy): \StdClass {
+        $oldToNew = $rates->$oldBaseCurrncy / $rates->$newBaseCurrency;
+        foreach($rates as $currency => &$rate) {
+            if ($newBaseCurrency === $currency) {
+                $rate = 1;
+            } else {
+                $rate = $oldToNew * $rate;
+            }
+        }
         return $rates;
     }
 

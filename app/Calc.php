@@ -32,9 +32,10 @@ class Calc {
         $this->currnetYear = $currentYear;
     }
 
-    public function calculateTax(float $price, string $currency): array
+    public function calculateTax(float $price, string $baseCurrency): array
     {
-        $rates = $this->exchangeApi->getRates($currency);
+        $rates = $this->exchangeApi->getRates($baseCurrency);
+
         $taxFreeMax = $this->getTaxFreeMaxEur() / $rates->rates->EUR;
 
         $valueAboveTaxFree = $price - $taxFreeMax;
