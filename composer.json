@@ -9,5 +9,8 @@
     "psr-4": {
       "App\\": "app/"
     }
+  },
+  "scripts": {
+    "csfix": "tools/php-cs-fixer/vendor/bin/php-cs-fixer fix app"
   }
 }

@@ -2,3 +2,4 @@
 /vendor
 php_errors.log
 *.DS_Store
+/.php-cs-fixer.cache

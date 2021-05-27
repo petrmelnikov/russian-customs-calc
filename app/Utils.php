@@ -2,9 +2,10 @@
 
 namespace App;
 
-class Utils {
-
-    public static function filterMoneyValue(string $value): float {
+class Utils
+{
+    public static function filterMoneyValue(string $value): float
+    {
         if (
             (
                 strstr($value, ',') &&
