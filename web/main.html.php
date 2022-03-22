@@ -14,12 +14,12 @@
                         <div class="form-group">
                             <label for="current_year">Year</label>
                             <select name="current_year" id="current_year" class="form-control">
-                                <?php foreach ($years as $year) {?>
+                                <?php foreach ($years as $yearName => $year) {?>
                                     <option
                                         value="<?=$year?>"
                                         <?php if ($currentYear === $year) {echo 'selected';}?>
                                     >
-                                        <?=$year?>
+                                        <?=$yearName?>
                                     </option>
                                 <?php } ?>
                             </select>

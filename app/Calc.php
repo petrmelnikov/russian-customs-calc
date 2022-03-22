@@ -19,11 +19,13 @@ class Calc
     public const TAX_FREE_MAX_EUR = [
         2019 => 500,
         2020 => 200,
+        2022 => 1000,
     ];
 
     public const TAX = [
         2019 => 1.3, // 30%
         2020 => 1.15, // 15%
+        2022 => 1.15, // 15%
     ];
 
     private $exchangeApi = null;
